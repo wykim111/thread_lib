@@ -17,7 +17,7 @@ void timer_handler(int sig) {
     for (int i = 0; i < 100; i++) {
         random_str[i] = rand() % 26 + 'a';
     }
-    random_str[100] = '\0';
+    random_str[101] = '\0';
     printf("random string: %s\n", random_str);
     
     if (cnt == 200) {
