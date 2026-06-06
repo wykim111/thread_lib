@@ -1,13 +1,28 @@
 #ifndef TIMER_HANDLER_H
 #define TIMER_HANDLER_H
 
-/* interval: 초 단위 주기 */
+#include <pthread.h> 
 
-int timer_handler_start(const char *timer_id,
-                        void (*callback)(void *),
-                        void *param,
-                        int interval);
+typedef struct {
+    char            timer_id[64];
+    void            (*callback)(void *);
+    void            *param;
+    int             interval;
+    int             running;
+    int             work_pending;
+    pthread_t       timer_tid;
+    pthread_t       worker_tid;
+    pthread_mutex_t mutex;
+    pthread_cond_t  cond;
+} timer_handler_t;
 
-int timer_handler_stop(const char *timer_id);
+// 시작 — 포인터 반환
+timer_handler_t *timer_handler_start(const char *timer_id,
+                                      void (*callback)(void *),
+                                      void *param,
+                                      int interval);
+
+// 종료 — 포인터 받기
+int timer_handler_stop(timer_handler_t *handler);
 
 #endif /* TIMER_HANDLER_H */
